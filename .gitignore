@@ -1,0 +1,32 @@
+# Node modules
+clients/node_modules/
+server/node_modules
+
+# Log files
+*.log
+
+# Environment variables file
+server/.env
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Build directories
+.next/
+.nuxt/
+dist/
+build/
+.vite/
+
+# Editor/IDE files
+.vscode/
+.idea/
+
+# npm / yarn log files
+npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# TypeScript build files
+*.tsbuildinfo
