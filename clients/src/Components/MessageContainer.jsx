@@ -9,7 +9,7 @@ import {io} from 'socket.io-client';
 
 const socket = io('http://localhost:5000');
 
-export default function MessageContainer({ currentChat }) {
+export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
   const [messageUpdateTrigger, setMessageUpdateTrigger] = useState(0);
   
@@ -72,13 +72,14 @@ export default function MessageContainer({ currentChat }) {
     // Trigger message re-fetch
     setMessageUpdateTrigger((prev) => prev + 1);
   };
+
   return (
     <Container>
       <div className="chat-header">
        
         <div className="user-details">
         <button className='back-btn'>
-        <img className = "back-btn-img" src={BackButton} alt="button" />
+        <img className = "back-btn-img" src={BackButton} alt="button" onClick={backFunction}/>
         </button>
           <div className="avatar">
             <img src={currentChat.avatarImage} alt="" />

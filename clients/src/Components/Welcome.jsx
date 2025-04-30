@@ -36,5 +36,9 @@ gap: 1rem;
 img{
     height: 30rem;
 }
+    @media screen and (max-width: 720px){
+    grid-template-columns: 100%;
+    display:none;
+}
 `
 

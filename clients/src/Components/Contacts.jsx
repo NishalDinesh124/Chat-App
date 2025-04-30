@@ -76,6 +76,7 @@ flex-direction: column;
 grid-template-rows:10% 76% 14%;
 border-right: solid 1px #e5e5e5;
 overflow: auto;
+ transition: opacity 0.5s ease, height 0.5s ease;
 
 ::-webkit-scrollbar {
   width: 8px;

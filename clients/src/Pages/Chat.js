@@ -54,6 +54,9 @@ export default function Chat() {
     setSelected(select)
 
   }
+const handleBackFunction=(()=>{
+  setSelected(false)
+})
   return (
     <>
       <Container>
@@ -62,13 +65,14 @@ export default function Chat() {
             <Contacts contacts={contacts} changeChat={handleChatChange} selectChat={handleHiddenTab} />
           </div>
 
-          {currentChat ? (
+          {currentChat &&selected? (
             <MessageContainer
               currentChat={currentChat}
+              backFunction={handleBackFunction}
 
             />
           ) : (
-            <Welcome />
+            <Welcome/>
           )}
         </div>
 
