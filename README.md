@@ -26,7 +26,7 @@ A modern, real-time chat application built with the MERN stack (MongoDB, Express
 
 ```bash
 git clone  https://github.com/NishalDinesh124/Chat-App.git
-```
+
 2. Install dependencies for both client and server:
 
 For server-side:
