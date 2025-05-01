@@ -102,7 +102,7 @@ overflow: auto;
   
   .container {
   border-radius: 1em;
-    height: 100vh;
+    height: 87%;
     width: 85vw;
     display: grid;
     background-color: #ffff;
