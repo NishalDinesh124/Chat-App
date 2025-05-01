@@ -129,6 +129,7 @@ overflow: auto;
     grid-template-columns: 100%;
     height:100vh;
     width: 100vw;
+    border-radius: 0em;
     .hidden-tab{
       display:none;
 }
