@@ -127,6 +127,8 @@ overflow: auto;
 
     @media screen and (max-width: 720px){
     grid-template-columns: 100%;
+    height:100vh;
+    width: 100vw;
     .hidden-tab{
       display:none;
 }
