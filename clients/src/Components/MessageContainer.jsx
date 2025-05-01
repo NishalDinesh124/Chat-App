@@ -7,7 +7,7 @@ import { sendMsgRoute, recieveMsgRoute } from '../Utils/APIRoutes';
 import BackButton from "../Assets/BackButton.png"
 import {io} from 'socket.io-client';
 
-const socket = io('http://localhost:5000');
+const socket = io(process.env.REACT_APP_API_URL);
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
@@ -21,7 +21,7 @@ export default function MessageContainer({ currentChat, backFunction }) {
     );
     axios.request({
       method: 'POST',
-      url: `http://localhost:5000/api/messages/getMsg`,
+      url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
       data: {
         from: data._id,
         to: currentChat._id
