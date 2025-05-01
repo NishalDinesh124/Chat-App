@@ -90,7 +90,7 @@ border-right: solid 1px #e5e5e5;
 overflow: auto;
   }
 
- height: calc(100vh - 50px);
+ height: calc(100vh - 100px);
   width: 100vw;
   display: flex;
   flex-direction: column;
