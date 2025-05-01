@@ -90,7 +90,8 @@ border-right: solid 1px #e5e5e5;
 overflow: auto;
   }
 
- height: 100vh;
+ height: calc(100vh - 100px);
+ padding-bottom : env(safe-area-insert-bottom);
   width: 100vw;
   display: flex;
   flex-direction: column;
@@ -102,7 +103,7 @@ overflow: auto;
   
   .container {
   border-radius: 1em;
-    height: 75%;
+    height: 85vh;
     width: 85vw;
     display: grid;
     background-color: #ffff;
