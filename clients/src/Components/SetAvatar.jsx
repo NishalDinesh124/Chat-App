@@ -29,7 +29,7 @@ export default function SetAvatar() {
         );
 
         const urls = seeds.map(
-          (seed) => `https://api.dicebear.com/7.x/avataaars/svg?seed=${seed}`
+          (seed) => `https://api.dicebear.com/7.x/bottts/svg?seed=${seed}`
         );
 
         setAvatars(urls);
