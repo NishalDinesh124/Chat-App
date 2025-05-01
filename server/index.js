@@ -36,7 +36,7 @@ const server = app.listen(PORT, () =>
 );
 const io = socketIo(server, {
   cors: {
-    origin: "*", // frontend URL
+    origin: process.env.FRONTEND_URL || "https://chat-app-nu-gules.vercel.app",
     methods: ["GET", "POST"]
   }
 });

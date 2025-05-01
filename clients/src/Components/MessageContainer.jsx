@@ -7,7 +7,7 @@ import { sendMsgRoute, recieveMsgRoute } from '../Utils/APIRoutes';
 import BackButton from "../Assets/BackButton.png"
 import {io} from 'socket.io-client';
 
-const socket = io(process.env.REACT_APP_API_URL);
+const socket = io(process.env.REACT_APP_API_URL) || "https://chat-app-dixz.onrender.com"
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
