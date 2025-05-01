@@ -147,6 +147,12 @@ background-color: #386b9d;
         height: 3rem;
     }
     }
+
+       @media screen and (max-width: 720px){
+       border: none;
+       .brand{
+       border-top-right-radius: 1em;}
+    }
     
 `
 
