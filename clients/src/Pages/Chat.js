@@ -14,6 +14,22 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [selected, setSelected] = useState(false);
+/////////////////// may be romoved
+  useEffect(() => {
+    const setVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty('--vh', `${vh}px`);
+    };
+
+    setVh(); // initial set
+    window.addEventListener('resize', setVh); // update on resize
+
+    return () => {
+      window.removeEventListener('resize', setVh);
+    };
+  }, []);
+
+  ///////////// may be romoved
   useEffect(() => {
     getCurrentUser()
   }, []);
@@ -90,7 +106,7 @@ border-right: solid 1px #e5e5e5;
 overflow: auto;
   }
 
- height: calc(100vh - 100px);
+  height: calc(var(--vh, 1vh) * 100);
  padding-bottom : env(safe-area-insert-bottom);
   width: 100vw;
   display: flex;
