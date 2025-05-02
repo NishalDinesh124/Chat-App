@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState ,useRef} from 'react'
 import styled from 'styled-components'
 import LogOut from './LogOut';
 import TextInput from './TextInput'
@@ -15,9 +15,14 @@ export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState("");
 
+  const messagesEndRef = useRef(null);
   const user = JSON.parse(
     localStorage.getItem('chat-app-user')
   );
+
+  const scrollToBottom = () =>{
+    messagesEndRef.current?.scrollIntoView({behaviour : "smooth"});
+  }
   const getMessages = async () => {   
     axios.request({
       method: 'POST',
@@ -43,6 +48,9 @@ useEffect(() =>{
   }
 }, [currentChat]);
 
+useEffect(()=>{
+  scrollToBottom();
+},[messages])
 useEffect(() => {
   if (!socket) return;
 
@@ -116,7 +124,7 @@ const handleMsgSend = async (msg) => {
             </div>
           )
         })}
-
+        <div ref={messagesEndRef}/>
       </div>
       <TextInput handleMsgSend={handleMsgSend} />
 
