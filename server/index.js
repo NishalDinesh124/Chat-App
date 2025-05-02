@@ -35,17 +35,16 @@ const startServer = async () => {
     app.use('/api/auth', authRoutes);
     app.use('/api/messages', messageRoutes);
 
-    const server = app.listen(PORT, () =>
-      console.log(`Server started on ${PORT}`)
-    );
   } catch (err) {
     console.log("Mongo connection failed");
 
   }
 
 }
-
-startServer();
+startServer(); // starting mongoDB
+const server = app.listen(PORT, () =>
+  console.log(`Server started on ${PORT}`)
+);
 const io = socketIo(server, {
   cors: {
     origin: process.env.FRONTEND_URL || "https://chat-app-nu-gules.vercel.app",
