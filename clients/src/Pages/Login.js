@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import axios from "axios";
 import { loginRoute } from '../Utils/APIRoutes'
 
+
 function Login() {
   const navigate = useNavigate();
     useEffect(()=>{
@@ -18,6 +19,21 @@ function Login() {
 
   const [username, setUsername] = useState()
   const [password, setPassword] = useState()
+
+// css autoadjust
+useEffect(() => {
+  const setVh = () => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  };
+
+  setVh(); // initial set
+  window.addEventListener('resize', setVh); // update on resize
+
+  return () => {
+    window.removeEventListener('resize', setVh);
+  };
+}, []);
 
   const handleValidation = () => {
     if (username === "") {
@@ -91,6 +107,8 @@ function Login() {
 }
 
 const FormContainer = styled.div`
+height: calc(var(--vh, 1vh) * 100);
+padding-bottom : env(safe-area-insert-bottom)
 height: 100vh;
 width: 100vw;
 display: flex;
