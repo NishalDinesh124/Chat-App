@@ -14,7 +14,7 @@ export default function Chat() {
   const [currentChat, setCurrentChat] = useState(null);
   const [currentUser, setCurrentUser] = useState(undefined);
   const [selected, setSelected] = useState(false);
-/////////////////// may be romoved
+  /////////////////// may be romoved
   useEffect(() => {
     const setVh = () => {
       const vh = window.innerHeight * 0.01;
@@ -70,9 +70,9 @@ export default function Chat() {
     setSelected(select)
 
   }
-const handleBackFunction=(()=>{
-  setSelected(false)
-})
+  const handleBackFunction = (() => {
+    setSelected(false)
+  })
   return (
     <>
       <Container>
@@ -81,14 +81,14 @@ const handleBackFunction=(()=>{
             <Contacts contacts={contacts} changeChat={handleChatChange} selectChat={handleHiddenTab} />
           </div>
 
-          {currentChat &&selected? (
+          {currentChat && selected ? (
             <MessageContainer
               currentChat={currentChat}
               backFunction={handleBackFunction}
 
             />
           ) : (
-            <Welcome/>
+            <Welcome />
           )}
         </div>
 
@@ -98,6 +98,15 @@ const handleBackFunction=(()=>{
 }
 
 const Container = styled.div`
+height: calc(var(--vh, 1vh) * 100);
+padding-bottom : env(safe-area-insert-bottom);
+ width: 100vw;
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ gap: 1rem;
+ align-items: center;
+ background-color: #1c3d53;
 
 .tab{
   display: grid;
@@ -106,17 +115,6 @@ border-right: solid 1px #e5e5e5;
 overflow: auto;
   }
 
-  height: calc(var(--vh, 1vh) * 100);
- padding-bottom : env(safe-area-insert-bottom);
-  width: 100vw;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 1rem;
-  align-items: center;
-  background-color: #1c3d53;
-
-  
   .container {
   border-radius: 1em;
     height: 85vh;

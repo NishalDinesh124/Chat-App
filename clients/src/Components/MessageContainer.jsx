@@ -12,17 +12,14 @@ const socket = io(process.env.REACT_APP_API_URL || "https://chat-app-dixz.onrend
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
-  const [messageUpdateTrigger, setMessageUpdateTrigger] = useState(0);
   
-  const getMessages = async () => {
-    console.log("Getting messages");
-    
+  const getMessages = async () => {   
     const data = await JSON.parse(
       localStorage.getItem('chat-app-user')
     );
     axios.request({
       method: 'POST',
-      url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
+      url: `${sendMsgRoute}/api/messages/getMsg`,
       data: {
         from: data._id,
         to: currentChat._id
@@ -59,7 +56,6 @@ const handleMsgSend = async (msg) => {
   });
 
   const messageData = {
-    fromSelf: true,
     message: msg,
     from: data._id,
     to: currentChat._id,
@@ -69,7 +65,7 @@ const handleMsgSend = async (msg) => {
   socket.emit('sendMessage', messageData);
 
   // Push to state immediately
-  setMessages((prev) => [...prev, messageData]);
+  setMessages((prev) => [...prev, { ...messageData, fromSelf: true }]);
 };
 
 
