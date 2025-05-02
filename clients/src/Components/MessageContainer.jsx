@@ -19,7 +19,7 @@ export default function MessageContainer({ currentChat, backFunction }) {
     );
     axios.request({
       method: 'POST',
-      url: `${sendMsgRoute}/api/messages/getMsg`,
+      url: `${recieveMsgRoute}/api/messages/getMsg`,
       data: {
         from: data._id,
         to: currentChat._id
