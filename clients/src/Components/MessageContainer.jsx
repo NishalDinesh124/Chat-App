@@ -179,7 +179,7 @@ overflow: hidden;
   padding: 1rem;
   gap: 1rem;
   overflow: auto;
-  scroll-behaviour : smooth;
+  scroll-behavior: smooth;
   .sended{
     display: flex;
     justify-content: flex-end;
