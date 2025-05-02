@@ -83,7 +83,7 @@ const handleMsgSend = async (msg) => {
     from: data._id,
   };
   socket.emit("sendMessage", messageData);
-  setMessages((prev) => [...prev, { ...messageData, fromSelf: true }]);
+  // setMessages((prev) => [...prev, { ...messageData, fromSelf: true }]);
 };
 
 
