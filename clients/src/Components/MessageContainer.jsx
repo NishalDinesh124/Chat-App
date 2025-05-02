@@ -63,7 +63,7 @@ useEffect(() => {
   return () => {
     socket.off("getMessage", handleIncoming); 
   };
-}, [socket,currentChat]);
+}, [socket]);
 
 
 // message sending funtion
