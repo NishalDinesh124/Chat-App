@@ -16,24 +16,36 @@ app.use(express.json());
 
 const uri = process.env.MONGO_URL
 const PORT = process.env.PORT || 5000;
-mongoose
-  .connect(uri, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => {
-    console.log("DB Connetion Successfull");
-  })
-  .catch((err) => {
-    console.log(err.message);
-  });
 
-app.use('/api/auth', authRoutes);
-app.use('/api/messages', messageRoutes);
+const startServer = async () => {
+  try {
+    await mongoose
+      .connect(uri, {
+        useNewUrlParser: true,
+        useUnifiedTopology: true,
+      })
+      .then(() => {
+        console.log("DB Connetion Successfull");
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
 
-const server = app.listen(PORT, () =>
-  console.log(`Server started on ${PORT}`)
-);
+
+    app.use('/api/auth', authRoutes);
+    app.use('/api/messages', messageRoutes);
+
+    const server = app.listen(PORT, () =>
+      console.log(`Server started on ${PORT}`)
+    );
+  } catch (err) {
+    console.log("Mongo connection failed");
+
+  }
+
+}
+
+startServer();
 const io = socketIo(server, {
   cors: {
     origin: process.env.FRONTEND_URL || "https://chat-app-nu-gules.vercel.app",
@@ -45,13 +57,13 @@ io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
   // Join room
-  socket.on("joinRoom", (roomId)=>{
+  socket.on("joinRoom", (roomId) => {
     socket.join(roomId);
     console.log(`Socket ${socket.id} joined room ${roomId}`);
   });
-// sending message to specific room
+  // sending message to specific room
 
-  socket.on('sendMessage', ({roomId, message, from}) => {
+  socket.on('sendMessage', ({ roomId, message, from }) => {
     const messageData = {
       from,
       message,
