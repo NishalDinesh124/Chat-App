@@ -45,7 +45,6 @@ export default function Welcome() {
 }
 
 const Container = styled.div`
-height: calc(var(--vh, 1vh) * 100);
 padding-bottom : env(safe-area-insert-bottom);
 display: flex;
 flex-direction: column;
