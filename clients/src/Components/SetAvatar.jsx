@@ -3,7 +3,7 @@ import styled from "styled-components";
 import axios from "axios";
 import loader from "../Assets/loader.gif";
 import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css'; 
+import 'react-toastify/dist/ReactToastify.css';
 import { useNavigate } from "react-router-dom";
 import { setAvatarRoute } from "../Utils/APIRoutes";
 
@@ -117,6 +117,19 @@ export default function SetAvatar() {
 }
 
 const Container = styled.div`
+@media screen and (max-width: 720px){
+.avatars{
+  display: flex;
+        flex-direction: column;
+        overflow: auto;
+        /* gap: 2rem; */
+        justify-content: center;
+        align-items: center;
+        height: 30%;
+}
+  
+}    
+
 display: flex;
 justify-content: center;
 align-items: center;
@@ -128,6 +141,8 @@ width: 100vw;
 background-color: #1c3d53;
 .avatars{
   display: flex;
+  max-width:80%;
+  overflow: auto;
   gap: 2rem;
   justify-content: center;
   align-items: center;
