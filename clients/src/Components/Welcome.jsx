@@ -6,6 +6,23 @@ import LogOut from './LogOut';
 export default function Welcome() {
     const [username, setUsername] = useState("");
 
+     /////////////////// may be romoved
+      useEffect(() => {
+        const setVh = () => {
+          const vh = window.innerHeight * 0.01;
+          document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+    
+        setVh(); // initial set
+        window.addEventListener('resize', setVh); // update on resize
+    
+        return () => {
+          window.removeEventListener('resize', setVh);
+        };
+      }, []);
+    
+      ///////////// may be romoved
+
     useEffect(()=>{
         getUser();
     },[])
@@ -28,6 +45,8 @@ export default function Welcome() {
 }
 
 const Container = styled.div`
+height: calc(var(--vh, 1vh) * 100);
+padding-bottom : env(safe-area-insert-bottom);
 display: flex;
 flex-direction: column;
 justify-content: center;
