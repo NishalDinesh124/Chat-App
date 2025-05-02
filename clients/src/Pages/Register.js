@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from "styled-components"
 import Logo from "../Assets/logo.svg"
 import { useNavigate, Link } from 'react-router-dom'
@@ -8,11 +8,27 @@ import axios from "axios";
 import { registerRoute } from '../Utils/APIRoutes'
 
 function Register() {
-    useEffect(()=>{
+
+    // css autoadjust
+    useEffect(() => {
+        const setVh = () => {
+            const vh = window.innerHeight * 0.01;
+            document.documentElement.style.setProperty('--vh', `${vh}px`);
+        };
+
+        setVh(); // initial set
+        window.addEventListener('resize', setVh); // update on resize
+
+        return () => {
+            window.removeEventListener('resize', setVh);
+        };
+    }, []);
+
+    useEffect(() => {
         if (localStorage.getItem('chat-app-user')) {
-          navigate('/')
+            navigate('/')
         }
-     },[])
+    }, [])
     const navigate = useNavigate();
 
     const [email, setEmail] = useState()
@@ -112,6 +128,8 @@ function Register() {
 }
 
 const FormContainer = styled.div`
+height: calc(var(--vh, 1vh) * 100);
+padding-bottom : env(safe-area-insert-bottom)
 height: 100vh;
 width: 100vw;
 display: flex;
@@ -182,6 +200,12 @@ form{
             }
         }
 }
+        @media screen and (max-width: 720px){
+        form{
+        height: 100vh;
+        width : 100vw;
+        }
+    }
 `;
 
 export default Register
