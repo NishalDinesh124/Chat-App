@@ -161,6 +161,12 @@ form{
             }
         }
 }
+        @media screen and (max-width: 720px){
+        form{
+        height: 100vh;
+        width : 100vw;
+        }
+    }
 `;
 
 export default Login;
