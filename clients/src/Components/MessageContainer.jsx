@@ -6,17 +6,21 @@ import axios from 'axios';
 import { sendMsgRoute, recieveMsgRoute } from '../Utils/APIRoutes';
 import BackButton from "../Assets/BackButton.png"
 import {io} from 'socket.io-client';
+import { data } from 'react-router-dom';
 
 const socket = io(process.env.REACT_APP_API_URL || "https://chat-app-dixz.onrender.com");
 
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
-  
+  const [user, setUser] = useState("");
+  const [roomId, setRoomId] = useState("");
+
   const getMessages = async () => {   
     const data = await JSON.parse(
       localStorage.getItem('chat-app-user')
     );
+    setUser(data._id);
     axios.request({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
@@ -29,21 +33,40 @@ export default function MessageContainer({ currentChat, backFunction }) {
       setMessages(res.data)
     })
   }
-
-useEffect(() => {
+const generateRoomId = (user, currentChat)=>{
+return [user,currentChat].sort().join("_");
+}
+useEffect(() =>{
   getMessages();
+  if(currentChat && user){
+    const newRoomId = generateRoomId(user, currentChat._id)
+    setRoomId(roomId)
+    socket.emit("joinRoom",newRoomId);
+  }
 }, [currentChat]);
 
 useEffect(() => {
-  socket.on('receiveMessage', (messageData) => {
-    setMessages((prev) => [...prev, messageData]);
-  });
+  if (!socket) return;
 
-  return () => socket.off('receiveMessage');
-}, []);
+  const handleIncoming = (data) => {
+    setMessages((prev) => [
+      ...prev,
+      {
+        ...data,
+        fromSelf: data.from === user,
+      },
+    ]);
+  };
+
+  socket.on("getMessage", handleIncoming);
+
+  return () => {
+    socket.off("getMessage", handleIncoming); 
+  };
+}, [socket,currentChat]);
 
 
-
+// message sending funtion
 const handleMsgSend = async (msg) => {
   if (!msg.trim()) return;
 
@@ -56,15 +79,11 @@ const handleMsgSend = async (msg) => {
   });
 
   const messageData = {
+    roomId,
     message: msg,
     from: data._id,
-    to: currentChat._id,
-    time: new Date().toISOString(),
   };
-
-  socket.emit('sendMessage', messageData);
-
-  // Push to state immediately
+  socket.emit("sendMessage", messageData);
   setMessages((prev) => [...prev, { ...messageData, fromSelf: true }]);
 };
 

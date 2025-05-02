@@ -44,9 +44,21 @@ const io = socketIo(server, {
 io.on('connection', (socket) => {
   console.log('A user connected:', socket.id);
 
-  socket.on('sendMessage', (messageData) => {
-    // broadcast to all clients except sender
-    socket.broadcast.emit('receiveMessage', messageData);
+  // Join room
+  socket.on("joinRoom", (roomId)=>{
+    socket.join(roomId);
+    console.log(`Socket ${socket.id} joined room ${roomId}`);
+  });
+// sending message to specific room
+
+  socket.on('sendMessage', ({roomId, message, from}) => {
+    const messageData = {
+      from,
+      message,
+      time: new Date().toISOString(),
+    };
+    // emit to all users in the same room
+    io.to(roomId).emit("getMessage", messageData);
   });
 
   socket.on('disconnect', () => {
