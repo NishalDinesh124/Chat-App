@@ -6,7 +6,7 @@ import axios from 'axios';
 import { sendMsgRoute, recieveMsgRoute } from '../Utils/APIRoutes';
 import BackButton from "../Assets/BackButton.png"
 import {io} from 'socket.io-client';
-import { data } from 'react-router-dom';
+//import { data } from 'react-router-dom';
 
 const socket = io(process.env.REACT_APP_API_URL || "https://chat-app-dixz.onrender.com");
 
@@ -16,17 +16,12 @@ export default function MessageContainer({ currentChat, backFunction }) {
   const [roomId, setRoomId] = useState("");
 
   const userId = JSON.parse(localStorage.getItem('chat-app-user'))?._id;
-  const getMessages = async () => {   
-    const data = await JSON.parse(
-      localStorage.getItem('chat-app-user')
-    );
-    console.log(data._id);
-    
+  const getMessages = async () => {     
     axios.request({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
       data: {
-        from: data._id,
+        from: userId._id,
         to: currentChat._id
       },
 
