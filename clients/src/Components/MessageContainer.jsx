@@ -16,11 +16,14 @@ export default function MessageContainer({ currentChat, backFunction }) {
   const [user, setUser] = useState("");
   const [roomId, setRoomId] = useState("");
 
+  const userId = JSON.parse(localStorage.getItem('chat-app-user'))?._id;
   const getMessages = async () => {   
     const data = await JSON.parse(
       localStorage.getItem('chat-app-user')
     );
     setUser(data._id);
+    console.log(data._id);
+    
     axios.request({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
@@ -33,14 +36,14 @@ export default function MessageContainer({ currentChat, backFunction }) {
       setMessages(res.data)
     })
   }
-const generateRoomId = (user, currentChat)=>{
+const generateRoomId =(user, currentChat)=>{
 return [user,currentChat].sort().join("_");
 }
 useEffect(() =>{
   getMessages();
   if(currentChat && user){
     const newRoomId = generateRoomId(user, currentChat._id)
-    setRoomId(roomId)
+    setRoomId(newRoomId)
     socket.emit("joinRoom",newRoomId);
   }
 }, [currentChat]);
@@ -48,12 +51,13 @@ useEffect(() =>{
 useEffect(() => {
   if (!socket) return;
 
-  const handleIncoming = (data) => {
+
+  const handleIncoming =async (data) => {
     setMessages((prev) => [
       ...prev,
       {
         ...data,
-        fromSelf: data.from === user,
+        fromSelf: data.from === userId._id,
       },
     ]);
   };
