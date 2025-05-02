@@ -13,7 +13,6 @@ const socket = io(process.env.REACT_APP_API_URL || "https://chat-app-dixz.onrend
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
-  const [user, setUser] = useState("");
   const [roomId, setRoomId] = useState("");
 
   const userId = JSON.parse(localStorage.getItem('chat-app-user'))?._id;
@@ -21,7 +20,6 @@ export default function MessageContainer({ currentChat, backFunction }) {
     const data = await JSON.parse(
       localStorage.getItem('chat-app-user')
     );
-    setUser(data._id);
     console.log(data._id);
     
     axios.request({
@@ -36,13 +34,13 @@ export default function MessageContainer({ currentChat, backFunction }) {
       setMessages(res.data)
     })
   }
-const generateRoomId =(user, currentChat)=>{
-return [user,currentChat].sort().join("_");
+const generateRoomId =(userId, currentChat)=>{
+return [userId,currentChat].sort().join("_");
 }
 useEffect(() =>{
   getMessages();
-  if(currentChat && user){
-    const newRoomId = generateRoomId(user, currentChat._id)
+  if(currentChat && userId){
+    const newRoomId = generateRoomId(userId, currentChat._id)
     setRoomId(newRoomId)
     socket.emit("joinRoom",newRoomId);
   }
