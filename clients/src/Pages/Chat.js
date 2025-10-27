@@ -38,14 +38,20 @@ export default function Chat() {
     getContacts();
   }, [currentUser]);
   const getContacts = async () => {
-    if (currentUser) {
-      if (currentUser.isAvatarImageSet) {
-        const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
-        setContacts(data.data);
-      } else {
-        navigate("/setAvatar");
+    try {
+      if (currentUser) {
+        if (currentUser.isAvatarImageSet) {
+          const data = await axios.get(`${allUsersRoute}/${currentUser._id}`);
+          setContacts(data.data);
+        } else {
+          navigate("/setAvatar");
+        }
       }
+    }catch(err){
+      console.log("An error occured while fetching contacts",err);
+      
     }
+    
   }
 
   const getCurrentUser = async () => {
@@ -99,14 +105,13 @@ export default function Chat() {
 
 const Container = styled.div`
 height: calc(var(--vh, 1vh) * 100);
-padding-bottom : env(safe-area-insert-bottom);
+//padding-bottom : env(safe-area-insert-bottom);
  width: 100vw;
  display: flex;
  flex-direction: column;
  justify-content: center;
- gap: 1rem;
  align-items: center;
- background-color: #1c3d53;
+background: radial-gradient(circle at top left, #3b548dff, #374d70ff, #364964ff);
 
 .tab{
   display: grid;
@@ -135,5 +140,4 @@ overflow: auto;
 
       
 }
-  }
 `;

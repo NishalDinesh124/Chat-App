@@ -1,108 +1,74 @@
-import React, { useEffect, useState ,useRef} from 'react'
-import styled from 'styled-components'
-import LogOut from './LogOut';
-import TextInput from './TextInput'
-import axios from 'axios';
-import { sendMsgRoute, recieveMsgRoute } from '../Utils/APIRoutes';
-import BackButton from "../Assets/BackButton.png"
-import {io} from 'socket.io-client';
-//import { data } from 'react-router-dom';
+import React, { useEffect, useState, useRef } from "react";
+import styled from "styled-components";
+import LogOut from "./LogOut";
+import TextInput from "./TextInput";
+import axios from "axios";
+import { sendMsgRoute } from "../Utils/APIRoutes";
+import BackButton from "../Assets/BackButton.png";
+import { io } from "socket.io-client";
 
-const socket = io(process.env.REACT_APP_API_URL || "https://chat-app-dixz.onrender.com");
-
+const socket = io("http://localhost:7000");
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
   const [roomId, setRoomId] = useState("");
-
   const messagesEndRef = useRef(null);
-  const user = JSON.parse(
-    localStorage.getItem('chat-app-user')
-  );
+  const user = JSON.parse(localStorage.getItem("chat-app-user"));
 
-  const scrollToBottom = () =>{
-    messagesEndRef.current?.scrollIntoView({behaviour : "smooth"});
-  }
-  const getMessages = async () => {   
-    axios.request({
-      method: 'POST',
-      url: `${process.env.REACT_APP_API_URL}/api/messages/getMsg`,
-      data: {
-        from: user._id,
-        to: currentChat._id
-      },
-
-    }).then(res => {
-      setMessages(res.data)
-    })
-  }
-const generateRoomId =(userId, currentChat)=>{
-return [userId,currentChat].sort().join("_");
-}
-useEffect(() =>{
-  getMessages();
-  if(currentChat && user){
-    const newRoomId = generateRoomId(user._id, currentChat._id)
-    setRoomId(newRoomId)
-    socket.emit("joinRoom",newRoomId);
-  }
-}, [currentChat]);
-
-useEffect(()=>{
-  scrollToBottom();
-},[messages])
-useEffect(() => {
-  if (!socket) return;
-
-
-  const handleIncoming =async (data) => {
-    setMessages((prev) => [
-      ...prev,
-      {
-        ...data,
-        fromSelf: data.from === user._id,
-      },
-    ]);
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
-  socket.on("getMessage", handleIncoming);
-
-  return () => {
-    socket.off("getMessage", handleIncoming); 
+  const getMessages = async () => {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/api/messages/getMsg`, {
+      from: user._id,
+      to: currentChat._id,
+    });
+    setMessages(res.data);
   };
-}, [socket]);
 
+  const generateRoomId = (userId, currentChat) => [userId, currentChat].sort().join("_");
 
-// message sending funtion
-const handleMsgSend = async (msg) => {
-  if (!msg.trim()) return;
+  useEffect(() => {
+    getMessages();
+    if (currentChat && user) {
+      const newRoomId = generateRoomId(user._id, currentChat._id);
+      setRoomId(newRoomId);
+      socket.emit("joinRoom", newRoomId);
+    }
+  }, [currentChat]);
 
-  const data = JSON.parse(localStorage.getItem('chat-app-user'));
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages]);
 
-  await axios.post(sendMsgRoute, {
-    from: data._id,
-    to: currentChat._id,
-    message: msg,
-  });
+  useEffect(() => {
+    if (!socket) return;
+    const handleIncoming = (data) => {
+      setMessages((prev) => [
+        ...prev,
+        { ...data, fromSelf: data.from === user._id },
+      ]);
+    };
+    socket.on("getMessage", handleIncoming);
+    return () => socket.off("getMessage", handleIncoming);
+  }, [socket]);
 
-  const messageData = {
-    roomId,
-    message: msg,
-    from: data._id,
+  const handleMsgSend = async (msg) => {
+    if (!msg.trim()) return;
+    const data = JSON.parse(localStorage.getItem("chat-app-user"));
+    await axios.post(sendMsgRoute, { from: data._id, to: currentChat._id, message: msg });
+    const messageData = { roomId, message: msg, from: data._id };
+    socket.emit("sendMessage", messageData);
   };
-  socket.emit("sendMessage", messageData);
-  // setMessages((prev) => [...prev, { ...messageData, fromSelf: true }]);
-};
-
 
   return (
     <Container>
       <div className="chat-header">
-       
         <div className="user-details">
-        <button className='back-btn'>
-        <img className = "back-btn-img" src={BackButton} alt="button" onClick={backFunction}/>
-        </button>
+          <button className="back-btn" onClick={backFunction}>
+            <img className="back-btn-img" src={BackButton} alt="back" />
+          </button>
           <div className="avatar">
             <img src={currentChat.avatarImage} alt="" />
           </div>
@@ -112,100 +78,143 @@ const handleMsgSend = async (msg) => {
         </div>
         <LogOut />
       </div>
+
       <div className="chat-messages">
-        {messages && messages.map((message, index) => {
-          return (
-            <div key={index}>
-              <div className={`message ${message.fromSelf ? "sended" : "recieved"}`}>
-                <div className='content'>
-                  <p>{message.message}</p>
-                </div>
-              </div>
+        {messages.map((message, index) => (
+          <div key={index} className={`message ${message.fromSelf ? "sended" : "received"}`}>
+            <div className="content">
+              <p>{message.message}</p>
             </div>
-          )
-        })}
-        <div ref={messagesEndRef}/>
+          </div>
+        ))}
+        <div ref={messagesEndRef} />
       </div>
+
       <TextInput handleMsgSend={handleMsgSend} />
-
     </Container>
-  )
+  );
 }
+
 const Container = styled.div`
-display: grid;
-grid-template-rows: 10% 80% 10%;
-overflow: hidden;
-
-.chat-header{
-  width: 98%;
-  border-bottom: solid 1px #e5e5e5;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-    .user-details{
-      display: flex;
-      flex-direction: row;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 2rem;
-      .avatar{
-       img{
-      height: 3rem;
-    }
-     
-      }
-    .back-btn{
-    border: none;
-    border-radius: 2em;
-    width: 35px;
-    height: 35px;
-
-    .back-btn-img{
-      width: 26px;
-      }
-    }
-     .back-btn:hover  {
-    cursor: pointer;
-    background-color: #96badd;
-    }
-     
-    
-  }
-}
-.chat-messages{
-  display: flex;
-  flex-direction: column;
-  padding: 1rem;
-  gap: 1rem;
-  overflow: auto;
-  scroll-behavior: smooth;
-  .sended{
-    display: flex;
-    justify-content: flex-end;
-    .content{
-      background-color:  #386b9d;
-      color: #fff
-    }
-  }
-  .recieved{
-  justify-content: flex-start;
-  .content{
-    background-color: #3126261c;
-  }
+  height: 100%;
+  width: 100%;
+  display: grid;
+  grid-template-rows: 10% 80% 10%;
+  background: radial-gradient(circle at top left, #0f172a, #1e293b, #334155);
+  backdrop-filter: blur(15px);
+  overflow-y:auto;
+  border-radius: 0 1em 1em 0; /* optional for smooth right panel edges */
   
-}
-}
-.message {
+
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.8rem 1.2rem;
+    background: rgba(255, 255, 255, 0.06);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+    .user-details {
       display: flex;
       align-items: center;
-      .content {
-        max-width: 40%;
-        overflow-wrap: break-word;
-        padding: 1rem;
-        font-size: 1.1rem;
-        border-radius: 1rem;
-        color: black;
+      gap: 0.8rem;
+
+      .back-btn {
+        border: none;
+        background: transparent;
+        border-radius: 50%;
+        transition: background 0.3s ease;
+        padding: 4px;
+
+        .back-btn-img {
+          width: 26px;
+        }
+
+        &:hover {
+          background: rgba(255, 255, 255, 0.1);
+          cursor: pointer;
+        }
+      }
+
+      .avatar img {
+        height: 3rem;
+        border-radius: 50%;
+        border: 2px solid #6366f1;
+      }
+
+      .user-name h3 {
+        color: #fff;
+        letter-spacing: 1px;
       }
     }
-`
+  }
+
+  .chat-messages {
+    display: flex;
+    flex-direction: column;
+    padding: 1rem 1.2rem;
+    gap: 1rem;
+    overflow-y: auto;
+    scroll-behavior: smooth;
+
+    .message {
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+
+      .content {
+        padding: 0.8rem 1rem;
+        font-size: 1rem;
+        border-radius: 1.2rem;
+        max-width: 65%;
+        word-wrap: break-word;
+      }
+    }
+
+    .sended {
+      justify-content: flex-end;
+      .content {
+        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        color: #fff;
+        box-shadow: 0 0 6px rgba(99, 102, 241, 0.4);
+      }
+    }
+
+    .received {
+      justify-content: flex-start;
+      .content {
+        background: rgba(255, 255, 255, 0.08);
+        color: #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        backdrop-filter: blur(10px);
+      }
+    }
+
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+    }
+  }
+
+  @media screen and (max-width: 768px) {
+    border-radius: 0;
+    .chat-header {
+      padding: 0.5rem 0.8rem;
+      .avatar img {
+        height: 2.5rem;
+      }
+      .user-name h3 {
+        font-size: 1rem;
+      }
+    }
+    .chat-messages .content {
+      font-size: 0.9rem;
+      max-width: 80%;
+    }
+  }
+`;
+
