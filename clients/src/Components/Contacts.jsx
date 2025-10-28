@@ -129,8 +129,6 @@ const Container = styled.div`
 
       .avatar img {
         height: 2.8rem;
-        border-radius: 50%;
-        border: 2px solid rgba(255, 255, 255, 0.1);
       }
 
       .username h3 {
@@ -160,8 +158,6 @@ const Container = styled.div`
     padding: 0.8rem;
     .avatar img {
       height: 2.6rem;
-      border-radius: 50%;
-      border: 2px solid rgba(255, 255, 255, 0.2);
     }
     .username h2 {
       color: #fff;

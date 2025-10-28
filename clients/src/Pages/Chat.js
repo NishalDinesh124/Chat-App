@@ -29,7 +29,6 @@ export default function Chat() {
     };
   }, []);
 
-  ///////////// may be romoved
   useEffect(() => {
     getCurrentUser()
   }, []);
@@ -47,11 +46,11 @@ export default function Chat() {
           navigate("/setAvatar");
         }
       }
-    }catch(err){
-      console.log("An error occured while fetching contacts",err);
-      
+    } catch (err) {
+      console.log("An error occured while fetching contacts", err);
+
     }
-    
+
   }
 
   const getCurrentUser = async () => {
@@ -80,32 +79,39 @@ export default function Chat() {
     setSelected(false)
   })
   return (
-    <>
-      <Container>
-        <div className="container">
-          <div className={`tab ${selected ? "hidden-tab" : ""}`}>
-            <Contacts contacts={contacts} changeChat={handleChatChange} selectChat={handleHiddenTab} />
-          </div>
+    <Container>
+      <div className="container">
+        {/* Contacts Section */}
+        <div className={`tab ${selected ? "hidden-tab" : ""}`}>
+          <Contacts
+            contacts={contacts}
+            changeChat={handleChatChange}
+            selectChat={handleHiddenTab}
+          />
+        </div>
 
-          {currentChat && selected ? (
+        {/* Right Section */}
+        <div className="chat-area">
+          {/* Desktop: Show Welcome only if no chat */}
+          {!selected && !currentChat && (
+            <Welcome />
+          )}
+
+          {/* Chat window visible only when a contact is selected */}
+          {currentChat && selected && (
             <MessageContainer
               currentChat={currentChat}
               backFunction={handleBackFunction}
-
             />
-          ) : (
-            <Welcome />
           )}
         </div>
-
-      </Container>
-    </>
+      </div>
+    </Container>
   );
 }
 
 const Container = styled.div`
 height: calc(var(--vh, 1vh) * 100);
-//padding-bottom : env(safe-area-insert-bottom);
  width: 100vw;
  display: flex;
  flex-direction: column;
@@ -113,19 +119,20 @@ height: calc(var(--vh, 1vh) * 100);
  align-items: center;
 background: radial-gradient(circle at top left, #3b548dff, #374d70ff, #364964ff);
 
+.chat-area{
+  width: 100%;
+}
+
 .tab{
   display: grid;
-flex-direction: column;
-border-right: solid 1px #e5e5e5;
-overflow: auto;
+  flex-direction: column;
+  overflow: auto;
   }
 
   .container {
-  border-radius: 1em;
-    height: 85vh;
-    width: 85vw;
+    height: 100vh;
+    width: 100vw;
     display: grid;
-    background-color: #ffff;
     grid-template-columns: 25% 75%;
 
     @media screen and (max-width: 720px){

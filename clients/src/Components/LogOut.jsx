@@ -22,21 +22,24 @@ export default function LogOut() {
 const Button = styled.button`
   display: flex;
   align-items: center;
+  background: transparent;
+  justify-content: center;
   padding: 0.7rem;
-  background-color: #3126261c;
   border: none;
-  border-radius: 2rem;
-  color: #315f7d;
+  width: 40px;
+  height: 40px;
+  border-radius:50%;
+  //color: #315f7d;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
-    background-color:#b9cedf; /* Slightly darker on hover */
+    background-color:#a4c2da; /* Slightly darker on hover */
     transform: scale(1.05); /* Slight scale-up on hover */
   }
 
   svg {
-    font-size: 1.5rem; /* Adjusted icon size */
-    margin-right: 0.5rem; /* Space between icon and any text */
+    font-size: 2em;
+    color: red;
   }
 `;

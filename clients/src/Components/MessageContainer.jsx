@@ -4,10 +4,10 @@ import LogOut from "./LogOut";
 import TextInput from "./TextInput";
 import axios from "axios";
 import { sendMsgRoute } from "../Utils/APIRoutes";
-import BackButton from "../Assets/BackButton.png";
+import { IoIosArrowBack } from "react-icons/io";
 import { io } from "socket.io-client";
 
-const socket = io("http://localhost:7000");
+const socket = io(process.env.REACT_APP_API_URL);
 
 export default function MessageContainer({ currentChat, backFunction }) {
   const [messages, setMessages] = useState([]);
@@ -67,10 +67,10 @@ export default function MessageContainer({ currentChat, backFunction }) {
       <div className="chat-header">
         <div className="user-details">
           <button className="back-btn" onClick={backFunction}>
-            <img className="back-btn-img" src={BackButton} alt="back" />
+            <IoIosArrowBack />
           </button>
           <div className="avatar">
-            <img src={currentChat.avatarImage} alt="" />
+            <img src={currentChat.avatarImage} alt={currentChat.username} />
           </div>
           <div className="user-name">
             <h3>{currentChat.username}</h3>
@@ -102,9 +102,13 @@ const Container = styled.div`
   grid-template-rows: 10% 80% 10%;
   background: radial-gradient(circle at top left, #0f172a, #1e293b, #334155);
   backdrop-filter: blur(15px);
-  overflow-y:auto;
-  border-radius: 0 1em 1em 0; /* optional for smooth right panel edges */
-  
+  overflow-y: auto;
+  animation: fadeIn 0.3s ease-in-out;
+
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateX(10px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
 
   .chat-header {
     display: flex;
@@ -112,8 +116,8 @@ const Container = styled.div`
     align-items: center;
     padding: 0.8rem 1.2rem;
     background: rgba(255, 255, 255, 0.06);
-    backdrop-filter: blur(12px);
     border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(12px);
 
     .user-details {
       display: flex;
@@ -121,14 +125,17 @@ const Container = styled.div`
       gap: 0.8rem;
 
       .back-btn {
+        display: none;
         border: none;
         background: transparent;
         border-radius: 50%;
+        width: 35px;
+        height: 35px;
+        color: #fff;
         transition: background 0.3s ease;
-        padding: 4px;
 
-        .back-btn-img {
-          width: 26px;
+        svg {
+          font-size: 22px;
         }
 
         &:hover {
@@ -140,7 +147,6 @@ const Container = styled.div`
       .avatar img {
         height: 3rem;
         border-radius: 50%;
-        border: 2px solid #6366f1;
       }
 
       .user-name h3 {
@@ -203,12 +209,19 @@ const Container = styled.div`
   @media screen and (max-width: 768px) {
     border-radius: 0;
     .chat-header {
-      padding: 0.5rem 0.8rem;
-      .avatar img {
-        height: 2.5rem;
-      }
-      .user-name h3 {
-        font-size: 1rem;
+      padding: 0.6rem 0.8rem;
+
+      .user-details {
+        gap: 0.6rem;
+        .back-btn {
+          display: flex;
+        }
+        .avatar img {
+          height: 2.4rem;
+        }
+        .user-name h3 {
+          font-size: 1rem;
+        }
       }
     }
     .chat-messages .content {
@@ -217,4 +230,5 @@ const Container = styled.div`
     }
   }
 `;
+
 

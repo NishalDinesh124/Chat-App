@@ -37,7 +37,7 @@ export default function TextInput(props) {
             onChange={(e) => setMsg(e.target.value)}
 
           />
-          <button>
+          <button className='snd-btn'>
             <IoMdSend />
 
           </button>
@@ -48,11 +48,10 @@ export default function TextInput(props) {
   )
 }
 const Container = styled.div`
-  display: grid;
+  display: flex;
   align-items: center;
-  grid-template-columns: 5% 95%;
   justify-content: center;
-  padding: 0 2rem;
+  padding:0 5px;
   gap:1em;
   @media screen and (min-width: 720px) and (max-width: 1080px) {
     padding: 0 1rem;
@@ -65,13 +64,13 @@ const Container = styled.div`
     .emoji-smile {
       font-size: 1.5rem;
       cursor: pointer;
-      color: #386b9d;
-      margin-bottom: 0.5rem;
+      color:  #8b5cf6;
+      margin-left: 1em;
     }
 
     .EmojiPickerReact {
       position: absolute;
-      bottom: 50px; /* Adjust as needed */
+      bottom: 50px; 
       left: 0;
       z-index: 10;
       width: 300px;
@@ -97,37 +96,41 @@ const Container = styled.div`
 ::-webkit-scrollbar-thumb:hover {
   background: #555;
 }
-   }
+
 
 .input-container{
+  position: relative;
     width: 100%;
     display: flex;
     align-items: center;
     border-radius: 1rem;
-    border: 1px solid #817474;
+
     input{
     width: 100%;
     height: 3rem;
     border: none;
-    color: black;
-    background-color: #3126261c;
+    color: #fff;
+    padding-left: 15px;
+    background-color: #1916164a;
     border-radius: 3em;
        &:focus{
-        outline: none;
+        outline: solid 1px #8b5cf6;
        }
        &::placeholder{
-        color: black;
+        color: #fff;
        }
     }
-    button{
+    .snd-btn{
+       position: absolute;
+       right: 1em;
         display: flex;
         flex-direction: column;
         align-items: center;
         background-color: transparent;
         border: none;
         svg{
-            color: #2980b9;
-            font-size: 1.3rem;
+            color:#8b5cf6;
+            font-size: 1.8rem;
         }
         @media screen and (min-width: 720px) and (max-width: 1080px) {
         padding: 0.3rem 1rem;
